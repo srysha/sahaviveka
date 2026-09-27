@@ -214,15 +214,44 @@ def retrieve_evidence(
         )
         return []
 
+    # ---------------------------------------------------------------
+    # Get Tavily API key.
+    #
+    # Local development:
+    #   Reads TAVILY_API_KEY from environment variables / .env
+    #
+    # Streamlit Cloud:
+    #   Falls back to st.secrets["TAVILY_API_KEY"]
+    # ---------------------------------------------------------------
+
     api_key = os.getenv(
         "TAVILY_API_KEY"
     )
 
     if not api_key:
+
+        try:
+
+            import streamlit as st
+
+            api_key = st.secrets.get(
+                "TAVILY_API_KEY"
+            )
+
+        except Exception:
+
+            api_key = None
+
+    if not api_key:
+
         print(
             "Agent 4: TAVILY_API_KEY is not configured."
         )
         return []
+
+    # ---------------------------------------------------------------
+    # Import Tavily
+    # ---------------------------------------------------------------
 
     try:
 
@@ -243,14 +272,20 @@ def retrieve_evidence(
     print(
         "\n=============================="
     )
+
     print(
         "AGENT 4 SEARCH QUERY"
     )
+
     print(
         "=============================="
     )
 
     print(query)
+
+    # ---------------------------------------------------------------
+    # Tavily search
+    # ---------------------------------------------------------------
 
     try:
 
@@ -286,6 +321,10 @@ def retrieve_evidence(
     )
 
     candidates = []
+
+    # ---------------------------------------------------------------
+    # Filter and score results
+    # ---------------------------------------------------------------
 
     for result in raw_results:
 
@@ -335,14 +374,20 @@ def retrieve_evidence(
             }
         )
 
+    # Highest relevance first
     candidates.sort(
         key=lambda item: item["score"],
         reverse=True,
     )
 
+    # Keep the five most relevant approved sources
     selected = candidates[:5]
 
     evidence = []
+
+    # ---------------------------------------------------------------
+    # Convert search results into EvidenceItem objects
+    # ---------------------------------------------------------------
 
     for item in selected:
 
@@ -372,6 +417,10 @@ def retrieve_evidence(
                 source_id=item["url"],
             )
         )
+
+    # ---------------------------------------------------------------
+    # Logging
+    # ---------------------------------------------------------------
 
     print(
         f"APPROVED RELEVANT EVIDENCE FOUND: "
