@@ -1,0 +1,16 @@
+# --- Core app ---
+streamlit>=1.40
+python-dotenv>=1.0
+
+# --- LLM client (Google Gemini - free tier, no card required) ---
+google-genai>=0.3.0
+
+# --- Structured data validation ---
+pydantic>=2.10
+
+# --- Testing ---
+pytest>=8.3
+
+# NOTE: RAG dependencies (chromadb, pypdf, sentence-transformers, etc.)
+# will be added in a later step, once we build the retrieval agent.
+# We keep requirements.txt lean on purpose so installs stay fast for now.

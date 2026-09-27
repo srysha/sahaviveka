@@ -1,0 +1,24 @@
+# Secrets
+.env
+api_keys.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Vector store (generated data, not source code)
+knowledge_base/vector_store/*
+!knowledge_base/vector_store/.gitkeep
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+
+# Local logs and backups
+*.log
+*.zip
+*backup*.py
